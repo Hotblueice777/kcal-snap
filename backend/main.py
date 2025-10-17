@@ -9,7 +9,7 @@ import httpx
 from PIL import Image, ExifTags
 from cachetools import TTLCache
 
-from utils import env
+from backend.utils import import_env
 from rate_limit import RateLimiter
 from nutrition import NutritionRepo, NutriCache, calc_totals
 
@@ -106,7 +106,7 @@ async def predict(image: UploadFile = File(...)):
 
 @app.get("/api/addons")
 async def get_addons(label: str):
-    
+
     """返回指定食物类别(label)的可选配料列表"""
     try:
         addons = repo.get_addons_for_label(label)

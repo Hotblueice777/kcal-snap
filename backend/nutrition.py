@@ -22,7 +22,7 @@ class NutritionRepo:
         if not row.empty:
             return row.iloc[0].to_dict()
 
-        # 如果没匹配到，就尝试 keyword 匹配
+        # 如果没匹配到，尝试 keyword 匹配
         for _, r in self.mapping.iterrows():
             if any(label.lower() in kw.lower() for kw in r["kw_list"]):
                 return r.to_dict()

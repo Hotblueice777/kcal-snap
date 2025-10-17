@@ -104,12 +104,11 @@ async def predict(image: UploadFile = File(...)):
     return PredictResponse(topk=topk, chosen=chosen)
 
 
-# 这个函数要放在 predict 外面（平级）
 @app.get("/api/addons")
 async def get_addons(label: str):
+    
     """返回指定食物类别(label)的可选配料列表"""
     try:
-        # ✅ 这里不用重新创建 repo，直接复用上面全局定义的 repo
         addons = repo.get_addons_for_label(label)
         return addons
     except Exception as e:

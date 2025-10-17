@@ -25,8 +25,9 @@ logs/
 AI_Training/
 train_ready/
 test_image/
-*.tsv
-*.csv
 *.png
 *.jpg
 *.jpeg
+
+# 允许 backend/data/ 里的 CSV 被提交
+!backend/data/*.csv

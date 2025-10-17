@@ -3,28 +3,28 @@ import subprocess
 import threading
 
 def run_fastapi():
-    port = os.getenv("PORT", "8000")  # Railway 自动分配 PORT
+    # FastAPI 后端监听内部端口（比如 8000），只供 Streamlit 调用
     subprocess.run([
         "uvicorn", 
         "backend.main:app", 
         "--host", "0.0.0.0", 
-        "--port", port
+        "--port", "8000"
     ], check=True)
 
 def run_streamlit():
+    # Streamlit 主进程，监听 Railway 自动分配的公开端口
+    port = os.getenv("PORT", "8501")
     subprocess.run([
         "streamlit", 
-        "run", "streamlit_client/app.py", 
-        "--server.port", "8501", 
+        "run", "streamlit_client/app.py",
+        "--server.port", port,
         "--server.address", "0.0.0.0"
     ], check=True)
 
 if __name__ == "__main__":
-    t1 = threading.Thread(target=run_fastapi)
-    t2 = threading.Thread(target=run_streamlit)
-
+    # 后端放后台线程
+    t1 = threading.Thread(target=run_fastapi, daemon=True)
     t1.start()
-    t2.start()
 
-    t1.join()
-    t2.join()
+    # 前端作为主服务启动（对应 Railway 公开端口）
+    run_streamlit()

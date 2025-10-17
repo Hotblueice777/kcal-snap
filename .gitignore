@@ -1,0 +1,32 @@
+# --- Python general ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# --- Environment ---
+.env
+.env.*
+venv/
+.venv/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Streamlit cache ---
+.streamlit/secrets.toml
+.streamlit/config.toml
+.cache/
+logs/
+
+# --- Training data / images ---
+AI_Training/
+train_ready/
+test_image/
+*.tsv
+*.csv
+*.png
+*.jpg
+*.jpeg

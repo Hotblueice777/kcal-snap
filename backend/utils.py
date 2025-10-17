@@ -1,4 +1,4 @@
-import os
+import os 
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -8,3 +8,7 @@ load_dotenv(env_path)
 
 def env(name: str, default: str | None = None) -> str | None:
     return os.getenv(name, default)
+
+def import_env():
+    """Backward compatible helper for Railway deploy"""
+    print("✅ Environment variables already loaded by utils.py")

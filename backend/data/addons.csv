@@ -1,0 +1,11 @@
+addon,delta_kcal_per_unit,delta_protein_g,delta_fat_g,delta_carb_g,unit_grams,applies_to_labels,notes
+cheese_slice,80,5,6.0,1.0,20,burger|sandwich|pizza,Single slice cheddar/mixed cheese.
+bacon_strip,45,3,3.5,0.0,8,burger|sandwich|salad,One cooked slice.
+double_patty,250,26,17.0,0.0,100,burger|sandwich,Adds one extra 100g beef patty.
+extra_mayo_10g,70,0,7.7,0.1,10,burger|sandwich|sushi,Extra mayo or spicy mayo 10g.
+no_bun,-250,-8,-4.0,-42.0,130,burger|sandwich,Remove standard bun (~130g total).
+avocado_50g,80,1,7.0,4.0,50,salad|sandwich|sushi,Adds 50g avocado.
+tempura_coating,90,3,5.0,9.0,40,sushi,Tempura roll style.
+extra_noodles_100g,150,5,1.0,30.0,100,ramen,Adds 100g cooked noodles.
+fried_egg,90,6,7.0,0.0,50,burger|ramen|salad|fried_rice,One fried egg.
+extra_cheese_pizza_25g,90,6,7.0,1.0,25,pizza,Adds ~25g shredded cheese.

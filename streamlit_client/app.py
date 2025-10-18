@@ -3,7 +3,7 @@ import streamlit as st  # type: ignore
 from PIL import Image, ExifTags
 
 # 后端服务地址
-BACKEND = st.secrets.get("BACKEND_URL", "http://localhost:8000")
+BACKEND = "http://localhost:8000"
 
 st.set_page_config(page_title="KcalSnap Demo", layout="centered")
 st.title("KcalSnap — Photo-first Calorie Estimate")

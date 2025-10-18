@@ -30,3 +30,10 @@ test_image/
 *.png
 *.jpg
 *.jpeg
+
+# 允许 backend/data/ 里的 CSV 被提交
+!backend/data/*.csv
+
+# 没上云可以在手机端使用的安全证书
+your_cert.pem
+your_key.pem

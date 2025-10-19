@@ -1,3 +1,5 @@
+# app.py
+
 import io, time, requests  # type: ignore
 import streamlit as st  # type: ignore
 from PIL import Image, ExifTags
@@ -42,6 +44,14 @@ def jpeg_bytes_from_uploader(uploaded):
 # --- 主界面 ---
 with st.form("capture"):
     photo = st.camera_input("Take a photo") or st.file_uploader("…or choose from library", type=["jpg", "jpeg", "png", "webp"])
+    
+    # Display the image immediately after it is uploaded/captured
+    if photo:
+        # Use st.image to display the image. 
+        # Streamlit handles the object type (UploadedFile) automatically.
+        st.image(photo, caption=photo.name if hasattr(photo, 'name') else 'Captured Photo', use_column_width=True)
+    # 🌟 END NEW CODE
+
     submitted = st.form_submit_button("Analyze")
 
     if submitted and photo:

@@ -1,5 +1,5 @@
 label,keywords,default_grams,base_kcal_per_100g,base_protein_g_per_100g,base_fat_g_per_100g,base_carb_g_per_100g,notes
-hamburgerburger,burger|hamburger|cheeseburger|beef burger,180,250,16,15,14,Generic fast-food style; adjust with addons for cheese/bacon/bun.
+hamburger,burger|hamburger|cheeseburger|beef burger,180,250,16,15,14,Generic fast-food style; adjust with addons for cheese/bacon/bun.
 pizza,pizza|pepperoni pizza|cheese pizza|margherita,150,266,11,10,33,Average mixed slice; toppings via addons.
 sushi,sushi|maki|nigiri|california roll,180,140,7,4,22,Mixed rolls average; tempura/mayo as addons.
 ramen,ramen|tonkotsu|shoyu|miso ramen,450,130,6,5,18,Broth + noodles + pork average; extras via addons.

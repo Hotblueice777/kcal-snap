@@ -9,12 +9,12 @@ BACKEND = os.getenv("BACKEND", "http://localhost:8000")
 def render():
     st.title("🍽️ My Meal — Daily Summary")
 
-    # 模拟数据
-    meals = [
-        {"time": "08:20", "name": "Toast + Egg", "cal": 250, "protein": 10, "fat": 8, "carb": 35},
-        {"time": "13:10", "name": "Sushi", "cal": 252, "protein": 12.6, "fat": 7.2, "carb": 39.6},
-    ]
-    df = pd.DataFrame(meals)
+    # ✅ 从 session_state 真实数据
+    if "meals" not in st.session_state or not st.session_state["meals"]:
+        st.info("No meals added yet. Go to Scan & Analyze to add your first meal!")
+        return
+
+    df = pd.DataFrame(st.session_state["meals"])
 
     st.subheader("📆 Today's Meals")
     st.dataframe(df, use_container_width=True)

@@ -114,10 +114,29 @@ def render():
                 c4.metric("Carbs (g)", nutr["totals"]["carb_g"])
                 st.caption(f"Source: {nutr['source']} · Estimate (not medical advice) · Cached: {nutr.get('cached', False)}")
                 st.caption(f"End-to-end latency: {round((time.time()-t0)*1000)} ms")
+                st.session_state["last_chosen"] = chosen
+                st.session_state["last_nutr"] = nutr
             else:
                 st.info("🧩 Wait for the image ready…")
 
-    # 跳转按钮
-    if st.button("Go to My Meal Summary ➡️"):
-        st.session_state["page"] = "🍽️ My Meal"
-        st.rerun()
+    # --- ✅ 新增：Add to My Meals ---
+    if st.button("➕ Add today's meal"):
+        chosen = st.session_state.get("last_chosen")
+        nutr = st.session_state.get("last_nutr")
+
+        if not chosen or not nutr:
+            st.warning("⚠️ Please analyze a photo first before adding a meal.")
+        else:
+            if "meals" not in st.session_state:
+                st.session_state["meals"] = []
+
+            new_meal = {
+                "time": time.strftime("%H:%M"),
+                "name": chosen,
+                "cal": nutr["totals"]["kcal"],
+                "protein": nutr["totals"]["protein_g"],
+                "fat": nutr["totals"]["fat_g"],
+                "carb": nutr["totals"]["carb_g"],
+            }
+            st.session_state["meals"].append(new_meal)
+            st.success(f"✅ Added {chosen} ({nutr['totals']['kcal']} kcal) to today's meals!")

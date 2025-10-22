@@ -7,3 +7,6 @@ pandas>=2.0
 cachetools==5.3.3
 python-dotenv==1.0.1
 Pillow==10.4.0
+azure-cognitiveservices-speech
+sounddevice
+scipy

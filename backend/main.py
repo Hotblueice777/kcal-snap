@@ -137,3 +137,7 @@ async def nutrition(label: str, grams: int = 180, addons: Optional[str] = ""):
     nutri_cache.set(label, grams, addon_ids, payload)
     return NutritionResponse(**payload)
 
+# 引入 Azure 助手 API 模块
+from assistant_api import app as assistant_app
+app.mount("/assistant", assistant_app)
+

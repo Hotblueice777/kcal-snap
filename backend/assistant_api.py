@@ -8,38 +8,6 @@ import base64
 
 app = FastAPI()
 
-# Food Image Prediction (Azure Custom Vision)
-@app.post("/api/predict")
-async def predict_food(file: UploadFile = File(...)):
-
-    import requests, os
-
-    # 读取上传图片
-    image_bytes = await file.read()
-
-    # 从环境变量读取配置
-    endpoint = os.getenv("AZURE_CV_ENDPOINT")
-    project_id = os.getenv("AZURE_CV_PROJECT_ID")
-    published_name = os.getenv("AZURE_CV_PUBLISHED_NAME")
-    prediction_key = os.getenv("AZURE_CV_PREDICTION_KEY")
-
-    # 拼接 API 地址
-    url = f"{endpoint}/customvision/v3.0/Prediction/{project_id}/classify/iterations/{published_name}/image"
-
-    headers = {
-        "Content-Type": "application/octet-stream",
-        "Prediction-Key": prediction_key,
-    }
-
-    try:
-        response = requests.post(url, headers=headers, data=image_bytes)
-        response.raise_for_status()
-        result = response.json()
-        return {"prediction": result, "message": "success"}
-    except Exception as e:
-        return {"error": str(e)}
-
-
 # Speech to Text
 @app.post("/api/speech_to_text")
 async def speech_to_text(audio_file: UploadFile = File(...)):

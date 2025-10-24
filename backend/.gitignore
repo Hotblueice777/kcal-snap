@@ -1,0 +1,35 @@
+# streamlit_client/.gitignore
+
+# Environment & Virtual Envs
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# IDE & Editor
+.vscode/
+.idea/
+*.log
+
+
+# OS / System Files
+.DS_Store
+Thumbs.db
+
+
+# Data & Generated Files
+*.bin
+*.wav
+*.mp3
+*.txt
+
+# Allow nutrition CSV data
+!backend/data/*.csv
+
+
+# Local Certificates & Keys
+your_cert.pem
+your_key.pem

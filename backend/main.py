@@ -1,4 +1,4 @@
-# main.py
+# backend/main.py
 from __future__ import annotations
 import io, json
 from typing import List, Optional

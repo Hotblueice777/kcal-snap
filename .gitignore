@@ -1,39 +1,23 @@
-# --- Python general ---
+# Global Python / System ignores
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.log
-
-# --- Environment ---
-.env
-.env.*
-venv/
-.venv/
-
-# --- OS files ---
 .DS_Store
 Thumbs.db
 
-# --- Streamlit cache ---
-.streamlit/secrets.toml
-.streamlit/config.toml
+# Environment / venv
+.env
+.venv/
+venv/
+**/.env
+**/.venv/
+
+# Local cache
 .cache/
 logs/
 
-# --- Training data / images ---
-AI_Training/
-train_ready/
-test_image/
-*.tsv
-*.csv
-*.png
-*.jpg
-*.jpeg
-
-# 允许 backend/data/ 里的 CSV 被提交
-!backend/data/*.csv
-
-# 没上云可以在手机端使用的安全证书
+# Certificates (for safety)
 your_cert.pem
 your_key.pem

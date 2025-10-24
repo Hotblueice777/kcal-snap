@@ -1,4 +1,4 @@
-# meal_page.py
+# streamlit_client/meal_page.py
 import streamlit as st
 import requests, os, time, base64
 import pandas as pd

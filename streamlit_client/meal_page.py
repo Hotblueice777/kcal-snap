@@ -6,7 +6,7 @@ import pandas as pd
 BACKEND = os.getenv("BACKEND", "http://localhost:8000")
 
 def render():
-    st.title("🍽️ My Meal — Daily Summary")
+    st.title("My Meal — Daily Summary")
 
     # ✅ 显示每日统计
     if "meals" not in st.session_state or not st.session_state["meals"]:
@@ -14,11 +14,11 @@ def render():
         return
 
     df = pd.DataFrame(st.session_state["meals"])
-    st.subheader("📆 Today's Meals")
+    st.subheader("Today's Meals")
     st.dataframe(df, use_container_width=True)
 
     total = df[["cal", "protein", "fat", "carb"]].sum()
-    st.markdown("### 🔢 Daily Totals")
+    st.markdown("### Daily Totals")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Calories (kcal)", f"{total['cal']:.0f}")
     c2.metric("Protein (g)", f"{total['protein']:.1f}")
@@ -26,7 +26,7 @@ def render():
     c4.metric("Carbs (g)", f"{total['carb']:.1f}")
 
     st.markdown("---")
-    st.title("🧠 AI Health Assistant")
+    st.title("AI Health Assistant")
 
     col1, col2 = st.columns(2)
 
@@ -46,7 +46,7 @@ def render():
 
             # Step 1️⃣ Speech → Text
             files = {"audio_file": open("input.wav", "rb")}
-            r = requests.post(f"{BACKEND}/api/speech_to_text", files=files)
+            r = requests.post(f"{BACKEND}/assistant/api/speech_to_text", files=files)
             text = r.json().get("text", "")
             if not text:
                 st.warning("Speech not recognized.")
@@ -55,13 +55,13 @@ def render():
 
             # Step 2️⃣ Text → RAG
             with st.spinner("Thinking..."):
-                r2 = requests.post(f"{BACKEND}/api/ask_rag", json={"text": text})
+                r2 = requests.post(f"{BACKEND}/assistant/api/ask_rag", json={"text": text})
                 answer = r2.json().get("answer", "No response.")
                 st.success(answer)
 
             # Step 3️⃣ RAG Answer → Speech
             with st.spinner("Converting to speech..."):
-                tts = requests.post(f"{BACKEND}/api/text_to_speech", json={"text": answer})
+                tts = requests.post(f"{BACKEND}/assistant/api/text_to_speech", json={"text": answer})
                 audio_base64 = tts.json().get("audio", "")
                 if audio_base64:
                     st.audio(base64.b64decode(audio_base64), format="audio/wav")
@@ -71,6 +71,6 @@ def render():
         user_input = st.text_input("💬 Type your question")
         if st.button("Ask Assistant"):
             with st.spinner("Thinking..."):
-                r = requests.post(f"{BACKEND}/api/ask_rag", json={"text": user_input})
+                r = requests.post(f"{BACKEND}/assistant/api/ask_rag", json={"text": user_input})
                 answer = r.json().get("answer", "No response.")
                 st.success(answer)

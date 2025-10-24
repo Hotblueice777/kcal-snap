@@ -1,0 +1,17 @@
+hamburger (burger|hamburger|cheeseburger|beef burger) provides about 250 kcal, 16g protein, 15g fat, and 14g carbohydrates per 100g.
+pizza (pizza|pepperoni pizza|cheese pizza|margherita) provides about 266 kcal, 11g protein, 10g fat, and 33g carbohydrates per 100g.
+sushi (sushi|maki|nigiri|california roll) provides about 140 kcal, 7g protein, 4g fat, and 22g carbohydrates per 100g.
+ramen (ramen|tonkotsu|shoyu|miso ramen) provides about 130 kcal, 6g protein, 5g fat, and 18g carbohydrates per 100g.
+fried_rice (fried rice|yangzhou fried rice|egg fried rice) provides about 170 kcal, 4g protein, 6g fat, and 26g carbohydrates per 100g.
+caesar_salad (salad|green salad|garden salad|mixed greens) provides about 80 kcal, 2g protein, 4g fat, and 8g carbohydrates per 100g.
+sandwich (sandwich|club sandwich|sub|hoagie) provides about 240 kcal, 12g protein, 10g fat, and 24g carbohydrates per 100g.
+Addon cheese_slice provides about  kcal energy.
+Addon bacon_strip provides about  kcal energy.
+Addon double_patty provides about  kcal energy.
+Addon extra_mayo_10g provides about  kcal energy.
+Addon no_bun provides about  kcal energy.
+Addon avocado_50g provides about  kcal energy.
+Addon tempura_coating provides about  kcal energy.
+Addon extra_noodles_100g provides about  kcal energy.
+Addon fried_egg provides about  kcal energy.
+Addon extra_cheese_pizza_25g provides about  kcal energy.

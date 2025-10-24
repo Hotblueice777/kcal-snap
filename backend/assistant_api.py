@@ -1,12 +1,46 @@
-# assistant_api.py
+# bsckend/assistant_api.py
 from fastapi import FastAPI, UploadFile, File, Body
+from assistant_rag import rag_answer
 import azure.cognitiveservices.speech as speechsdk
 import httpx, os
 import base64
 
+
 app = FastAPI()
 
-# ======= Speech to Text =======
+# Food Image Prediction (Azure Custom Vision)
+@app.post("/api/predict")
+async def predict_food(file: UploadFile = File(...)):
+
+    import requests, os
+
+    # 读取上传图片
+    image_bytes = await file.read()
+
+    # 从环境变量读取配置
+    endpoint = os.getenv("AZURE_CV_ENDPOINT")
+    project_id = os.getenv("AZURE_CV_PROJECT_ID")
+    published_name = os.getenv("AZURE_CV_PUBLISHED_NAME")
+    prediction_key = os.getenv("AZURE_CV_PREDICTION_KEY")
+
+    # 拼接 API 地址
+    url = f"{endpoint}/customvision/v3.0/Prediction/{project_id}/classify/iterations/{published_name}/image"
+
+    headers = {
+        "Content-Type": "application/octet-stream",
+        "Prediction-Key": prediction_key,
+    }
+
+    try:
+        response = requests.post(url, headers=headers, data=image_bytes)
+        response.raise_for_status()
+        result = response.json()
+        return {"prediction": result, "message": "success"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# Speech to Text
 @app.post("/api/speech_to_text")
 async def speech_to_text(audio_file: UploadFile = File(...)):
     """Convert speech to text using Azure Speech Service"""
@@ -27,7 +61,7 @@ async def speech_to_text(audio_file: UploadFile = File(...)):
     else:
         return {"error": str(result.reason)}
 
-# ======= Text Assistant (QnA) =======
+# Text Assistant (QnA)
 @app.post("/api/ask")
 async def ask_assistant(payload: dict = Body(...)):
     endpoint = os.getenv("AZURE_QNA_ENDPOINT")
@@ -46,7 +80,7 @@ async def ask_assistant(payload: dict = Body(...)):
 
     async with httpx.AsyncClient(timeout=15) as client:
         res = await client.post(url, headers=headers, json=data)
-        print("Azure QnA Response:", res.text)  # 🔍 调试：打印 Azure 返回原文
+        print("Azure QnA Response:", res.text)
 
     try:
         r_json = res.json()
@@ -60,7 +94,7 @@ async def ask_assistant(payload: dict = Body(...)):
     print(">>> project:", project)
     print(">>> deployment:", deployment)
 
-# ======= Text to Speech =======
+# Text to Speech
 @app.post("/api/text_to_speech")
 async def text_to_speech(payload: dict = Body(...)):
     """Convert text to speech (TTS)"""
@@ -77,12 +111,21 @@ async def text_to_speech(payload: dict = Body(...)):
     result = synthesizer.speak_text_async(text).get()
 
     if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-        # 将音频转成 base64 返回前端
+# trans audio to base64 back to frontend
         with open(audio_path, "rb") as f:
             audio_base64 = base64.b64encode(f.read()).decode("utf-8")
         return {"audio": audio_base64}
     else:
         return {"error": str(result.reason)}
+    
+# Add RAG
+@app.post("/api/ask_rag")
+async def ask_rag(payload: dict = Body(...)):
+    question = payload.get("text", "")
+    answer = rag_answer(question)
+    return {"answer": answer}
+
+
     
     print(">>> Requesting Azure Language API")
     print("endpoint:", endpoint)

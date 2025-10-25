@@ -35,7 +35,7 @@ def rag_answer(question: str):
     D, I = index.search(np.array(q_emb), k=3)
 
     # FAISS返回的距离越小越相似，这里设阈值（>0.8表示相似度太低）
-    if len(D[0]) == 0 or D[0][0] > 0.8:
+    if len(D[0]) == 0 or D[0][0] > 0.6:
         print("⚠️ Low similarity, switching to GPT fallback")
         return fallback_answer(question)
 
@@ -43,8 +43,11 @@ def rag_answer(question: str):
 
     # === 2️⃣ 构造提示并生成回答 ===
     prompt = f"""
-You are a helpful nutrition assistant. 
-Use the context below to answer the question as accurately as possible.
+You are a concise and friendly nutrition assistant.
+Use the context below to answer the question **only if relevant**.
+If context is not clearly related, reply with a short general answer.
+
+Please answer in under 80 words.
 
 Context:
 {context}
@@ -55,7 +58,8 @@ Question: {question}
     try:
         response = client.chat.completions.create(
             model=DEPLOYMENT_NAME,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=200
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -69,9 +73,10 @@ def fallback_answer(question: str):
         response = client.chat.completions.create(
             model=DEPLOYMENT_NAME,
             messages=[
-                {"role": "system", "content": "You are a helpful AI nutrition assistant."},
+                {"role": "system", "content": "You are a helpful AI nutrition assistant." "Please answer in under 80 words, focusing on key points."},
                 {"role": "user", "content": question}
-            ]
+            ],
+            max_tokens=200
         )
         return response.choices[0].message.content
     except Exception as e:

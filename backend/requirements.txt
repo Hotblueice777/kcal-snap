@@ -7,6 +7,10 @@ pandas>=2.0
 cachetools==5.3.3
 python-dotenv==1.0.1
 Pillow==10.4.0
-azure-cognitiveservices-speech
-sounddevice
-scipy
+azure-cognitiveservices-speech==1.38.0
+sentence-transformers==3.0.1
+faiss-cpu==1.8.0
+torch==2.0.0
+transformers==4.57.1
+scipy==1.12.0
+tqdm==4.67.1

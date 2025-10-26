@@ -1,32 +1,23 @@
-# --- Python general ---
+# Global Python / System ignores
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.log
-
-# --- Environment ---
-.env
-.env.*
-venv/
-.venv/
-
-# --- OS files ---
 .DS_Store
 Thumbs.db
 
-# --- Streamlit cache ---
-.streamlit/secrets.toml
-.streamlit/config.toml
+# Environment / venv
+.env
+.venv/
+venv/
+**/.env
+**/.venv/
+
+# Local cache
 .cache/
 logs/
 
-# --- Training data / images ---
-AI_Training/
-train_ready/
-test_image/
-*.tsv
-*.csv
-*.png
-*.jpg
-*.jpeg
+# Certificates (for safety)
+your_cert.pem
+your_key.pem

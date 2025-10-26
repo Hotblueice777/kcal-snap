@@ -1,4 +1,4 @@
-# main.py
+# backend/main.py
 from __future__ import annotations
 import io, json
 from typing import List, Optional
@@ -135,4 +135,8 @@ async def nutrition(label: str, grams: int = 180, addons: Optional[str] = ""):
     payload = {"totals": result["totals"], "range": result["range"], "source": "local-mapping-v1"}
     nutri_cache.set(label, grams, addon_ids, payload)
     return NutritionResponse(**payload)
+
+# 引入 Azure 助手 API 模块
+from assistant_api import app as assistant_app
+app.mount("/assistant", assistant_app)
 

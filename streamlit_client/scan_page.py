@@ -8,7 +8,12 @@ from PIL import Image, ExifTags
 BACKEND = "http://localhost:8000"
 
 def render(): 
-    st.title("KcalSnap — Photo-first Calorie Estimate")
+    st.markdown("""
+        <h1 style='margin-bottom:0; color:#766A8F'>KcalSnap</h1>
+        <p style='font-size:18px; color:#666666; margin-top:0'>
+        Snap your meal, get instant calorie insights
+        </p>
+        """, unsafe_allow_html=True)
 
     # --- 修正照片方向 ---
     def fix_orientation(img: Image.Image) -> Image.Image:
@@ -43,13 +48,13 @@ def render():
 
     # --- 主界面 ---
     with st.form("capture"):
-        photo = st.camera_input("Take a photo") or st.file_uploader("…or choose from library", type=["jpg", "jpeg", "png", "webp"])
+        photo = st.camera_input("") or st.file_uploader("…or choose from library", type=["jpg", "jpeg", "png", "webp"])
         
         # Display the image immediately after it is uploaded/captured
         if photo:
             # Use st.image to display the image. 
             # Streamlit handles the object type (UploadedFile) automatically.
-            st.image(photo, caption=photo.name if hasattr(photo, 'name') else 'Captured Photo', use_column_width=True)
+            st.image(photo, caption=photo.name if hasattr(photo, 'name') else 'Captured Photo', use_container_width=True)
         # 🌟 END NEW CODE
 
         submitted = st.form_submit_button("Analyze")

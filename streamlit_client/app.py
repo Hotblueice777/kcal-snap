@@ -5,6 +5,26 @@ import scan_page, meal_page, assistant_page
 
 st.set_page_config(page_title="KcalSnap", layout="centered")
 
+st.markdown("""
+        <style>
+        /* 全局修改 Streamlit 提示框样式 */
+        div.stAlert {
+            background-color: #F7F5FA !important;  /* 柔和灰紫底 */
+            border: 1px solid #E0DAEB !important;  /* 微边框 */
+            color: #6E5B8B !important;             /* 暗紫灰文字 */
+            border-radius: 10px !important;
+            padding: 12px 16px !important;
+        }
+
+        /* success / info / warning / error 的图标也统一紫灰色 */
+        div.stAlert [data-testid="stMarkdownContainer"] p,
+        div.stAlert svg {
+            color: #6E5B8B !important;
+            fill: #6E5B8B !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
 # 侧边栏导航
 page = st.sidebar.radio("KcalSnap", ["Scan & Analyze", "My Meal", "AI Assistant"])
 

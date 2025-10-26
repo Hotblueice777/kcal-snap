@@ -8,6 +8,7 @@ from PIL import Image, ExifTags
 BACKEND = "http://localhost:8000"
 
 def render(): 
+    
     st.markdown("""
         <h1 style='margin-bottom:0; color:#766A8F'>KcalSnap</h1>
         <p style='font-size:18px; color:#666666; margin-top:0'>

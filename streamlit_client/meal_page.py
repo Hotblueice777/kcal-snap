@@ -8,7 +8,6 @@ BACKEND = os.getenv("BACKEND", "http://localhost:8000")
 def render():
     st.markdown("<h1 style='color:#766A8F;'>My Meal — Daily Summary</h1>", unsafe_allow_html=True)
 
-    # ✅ 显示每日统计
     if "meals" not in st.session_state or not st.session_state["meals"]:
         st.info("No meals added yet. Go to Scan & Analyze to add your first meal!")
         return

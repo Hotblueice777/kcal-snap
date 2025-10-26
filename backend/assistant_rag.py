@@ -6,20 +6,18 @@ from sentence_transformers import SentenceTransformer
 from openai import AzureOpenAI
 from dotenv import load_dotenv
 
-# 加载 .env 环境变量
 load_dotenv()
 
-# 初始化 Azure OpenAI 客户端
+# init Azure OpenAI client
 client = AzureOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     api_version="2024-05-01-preview"
 )
 
-# 模型部署名（你在 Azure 上的 deployment name）
 DEPLOYMENT_NAME = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
 
-# 加载 FAISS 索引和文本
+# load FAISS index and text
 model = SentenceTransformer("all-MiniLM-L6-v2")
 index = faiss.read_index("faiss_index.bin")
 
@@ -28,20 +26,20 @@ with open("faiss_texts.txt", "r", encoding="utf-8") as f:
 
 
 def rag_answer(question: str):
-    """主函数：先查本地知识库，如匹配度低则fallback到GPT通用回答"""
+    """Use general GPT response when knowledge base search fails or similarity is too low."""
 
-    # === 1️⃣ 检索最相似段落 ===
+    # The smaller the FAISS distance, the higher the similarity. 
     q_emb = model.encode([question])
     D, I = index.search(np.array(q_emb), k=3)
 
-    # FAISS返回的距离越小越相似，这里设阈值（>0.8表示相似度太低）
+    # set a threshold
     if len(D[0]) == 0 or D[0][0] > 0.6:
         print("⚠️ Low similarity, switching to GPT fallback")
         return fallback_answer(question)
 
     context = "\n".join([texts[i] for i in I[0]])
 
-    # === 2️⃣ 构造提示并生成回答 ===
+    # Construct prompt and generate answer
     prompt = f"""
 You are a concise and friendly nutrition assistant.
 Use the context below to answer the question **only if relevant**.
@@ -68,7 +66,7 @@ Question: {question}
 
 
 def fallback_answer(question: str):
-    """若知识库检索失败或匹配度太低，改为通用GPT回答"""
+    """Fallback to general GPT response when knowledge base retrieval fails or similarity is too low."""
     try:
         response = client.chat.completions.create(
             model=DEPLOYMENT_NAME,

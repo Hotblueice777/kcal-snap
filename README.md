@@ -110,7 +110,7 @@ Select your repo and deploy the /streamlit_client/app.py entry
 
 🧑‍💻 Author
 
-Joey Qi
+Joey
 🎨 Artist | 💻 Full-Stack Developer | 🤖 AI Engineer
 📍 Calgary, Canada
 

@@ -64,7 +64,6 @@ async def azure_predict(image_bytes: bytes) -> list[TopKItem]:
     published_name = env("AZURE_CV_PUBLISHED_NAME")
     key = env("AZURE_CV_PREDICTION_KEY")
     if not (endpoint and project_id and published_name and key):
-        # --- MOCK: 没配环境变量就返回示例 Top-3（方便本地演示） ---
         return [TopKItem(label="burger", score=0.82),
                 TopKItem(label="sandwich", score=0.11),
                 TopKItem(label="steak", score=0.07)]
@@ -82,11 +81,11 @@ async def azure_predict(image_bytes: bytes) -> list[TopKItem]:
 # --- Routes ---
 @app.post("/api/predict", response_model=PredictResponse)
 async def predict(image: UploadFile = File(...)):
-    # 简单 MIME 校验
+
     if image.content_type not in ("image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"):
         raise HTTPException(400, "Unsupported image type")
 
-    # 压缩到最长边512 & 旋转修正
+    # Resize to a maximum dimension of 512 & apply rotation correction
     raw = await image.read()
     img = Image.open(io.BytesIO(raw)).convert("RGB")
     img = _fix_orientation(img)
@@ -107,7 +106,7 @@ async def predict(image: UploadFile = File(...)):
 @app.get("/api/addons")
 async def get_addons(label: str):
     
-    """返回指定食物类别(label)的可选配料列表"""
+    """Return a list of optional add-on ingredients for the specified food label"""
     try:
         addons = repo.get_addons_for_label(label)
         return addons
@@ -121,7 +120,7 @@ async def nutrition(label: str, grams: int = 180, addons: Optional[str] = ""):
         raise HTTPException(404, f"Unknown label: {label}")
 
     addon_ids = [a for a in (addons or "").split(",") if a]
-    # 从 CSV 取 addon 明细
+    # Retrieve add-on details from the CSV
     addon_rows = []
     for aid in addon_ids:
         row = repo.addons[repo.addons["addon"] == aid]
@@ -136,7 +135,7 @@ async def nutrition(label: str, grams: int = 180, addons: Optional[str] = ""):
     nutri_cache.set(label, grams, addon_ids, payload)
     return NutritionResponse(**payload)
 
-# 引入 Azure 助手 API 模块
+# Import Azure assistant API module
 from assistant_api import app as assistant_app
 app.mount("/assistant", assistant_app)
 

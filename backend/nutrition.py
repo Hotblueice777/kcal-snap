@@ -4,40 +4,40 @@ import math
 import pandas as pd
 from cachetools import TTLCache
 
-# 读CSV（程序启动时加载到内存）
+# Read CSV (load into memory at program startup)
 class NutritionRepo:
     def __init__(self, mapping_csv: str, addons_csv: str):
         self.mapping = pd.read_csv("data/mapping.csv")
         self.addons = pd.read_csv("data/addons.csv")
 
-        # 列表化关键词
+        # Convert keywords into a list
         self.mapping["kw_list"] = self.mapping["keywords"].apply(
             lambda s: [x.strip() for x in str(s).split("|")]
         )
 
-    # ✅ 主食物基础营养查找
+    # Lookup base nutrition for main food item
     def get_base(self, label: str) -> dict | None:
-        # 先直接匹配 label 列
+        # First, match directly with the label column
         row = self.mapping[self.mapping["label"] == label]
         if not row.empty:
             return row.iloc[0].to_dict()
 
-        # 如果没匹配到，尝试 keyword 匹配
+        # If not matched, try keyword matching
         for _, r in self.mapping.iterrows():
             if any(label.lower() in kw.lower() for kw in r["kw_list"]):
                 return r.to_dict()
 
-        # 都没找到就返回 None
+        # Return None if no match is found
         return None
 
-    # ✅ 附加项（配料）查找
+    # Lookup additional ingredients (add-ons)
     def get_addons_for_label(self, label: str) -> list[dict]:
-        # 1️⃣ 先尝试直接匹配 label
+        # Try direct label matching
         df = self.addons[self.addons["applies_to_labels"].str.contains(label, case=False, na=False)]
         if not df.empty:
             return [r._asdict() if hasattr(r, "_asdict") else dict(r) for _, r in df.iterrows()]
 
-        # 2️⃣ 如果没匹配到，尝试关键词匹配主类（如 hamburger → burger）
+        # If not matched, attempt keyword matching for main category (e.g., hamburger → burger)
         base = self.get_base(label)
         if base:
             true_label = base["label"]
@@ -45,11 +45,11 @@ class NutritionRepo:
             if not df.empty:
                 return [r._asdict() if hasattr(r, "_asdict") else dict(r) for _, r in df.iterrows()]
 
-        # 3️⃣ 都没找到就返回空列表
+        # Return an empty list if no match is found
         return []
 
 
-    # ✅ 根据关键字查找主类别（备用功能）
+    # Find main category by keyword (backup function)
     def find_label_by_keyword(self, text: str) -> str | None:
         t = text.lower()
         for _, r in self.mapping.iterrows():
@@ -58,7 +58,7 @@ class NutritionRepo:
         return None
 
 
-# 计算总营养
+# Calculate total nutrition
 def calc_totals(base: dict, grams: int, selected_addons: list[dict]) -> dict:
     factor = grams / 100.0
     base_totals = {
@@ -79,13 +79,11 @@ def calc_totals(base: dict, grams: int, selected_addons: list[dict]) -> dict:
         "fat_g": round(base_totals["fat_g"] + addon_totals["fat_g"], 1),
         "carb_g": round(base_totals["carb_g"] + addon_totals["carb_g"], 1),
     }
-    # 先用±15% 作为不确定区间
     rng = {"kcal_low": round(totals["kcal"] * 0.85), "kcal_high": round(totals["kcal"] * 1.15)}
     return {"totals": totals, "range": rng}
 
-# 简单缓存 label+grams+addons 结果
 class NutriCache:
-    def __init__(self):  # 500 个键，生存 48h
+    def __init__(self): 
         self.cache = TTLCache(maxsize=500, ttl=60*60*48)
 
     def key(self, label, grams, addon_ids):

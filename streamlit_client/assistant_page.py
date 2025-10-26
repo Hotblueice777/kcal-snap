@@ -14,7 +14,7 @@ def render():
 
     col1, col2 = st.columns(2)
 
-    # 🎤 语音提问
+    # Azure speach
     with col1:
         if st.button("🎤 Speak Now"):
             import sounddevice as sd
@@ -28,7 +28,7 @@ def render():
             write("input.wav", fs, myrecording)
             st.success("Recording complete!")
 
-            # Step 1️⃣ Speech → Text
+            # Step1: Speech → Text
             files = {"audio_file": open("input.wav", "rb")}
             r = requests.post(f"{BACKEND}/assistant/api/speech_to_text", files=files)
             text = r.json().get("text", "")
@@ -37,20 +37,20 @@ def render():
                 return
             st.write(f"🗣 You said: {text}")
 
-            # Step 2️⃣ Text → RAG
+            # Step2: Text → RAG
             with st.spinner("Thinking..."):
                 r2 = requests.post(f"{BACKEND}/assistant/api/ask_rag", json={"text": text})
                 answer = r2.json().get("answer", "No response.")
                 st.success(answer)
 
-            # Step 3️⃣ RAG Answer → Speech
+            # Step3: RAG Answer → Speech
             with st.spinner("Converting to speech..."):
                 tts = requests.post(f"{BACKEND}/assistant/api/text_to_speech", json={"text": answer})
                 audio_base64 = tts.json().get("audio", "")
                 if audio_base64:
                     st.audio(base64.b64decode(audio_base64), format="audio/wav")
 
-    # 💬 文字输入
+    # QnA text
     with col2:
         user_input = st.text_input("💬 Type your question")
         if st.button("Ask Assistant"):

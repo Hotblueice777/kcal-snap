@@ -4,7 +4,6 @@ import io, time, requests  # type: ignore
 import streamlit as st  # type: ignore
 from PIL import Image, ExifTags
 
-# 后端服务地址
 BACKEND = "http://localhost:8000"
 
 def render(): 
@@ -16,7 +15,7 @@ def render():
         </p>
         """, unsafe_allow_html=True)
 
-    # --- 修正照片方向 ---
+    # Correct photo orientation
     def fix_orientation(img: Image.Image) -> Image.Image:
         try:
             for orientation in ExifTags.TAGS.keys():
@@ -32,7 +31,7 @@ def render():
         return img
 
 
-    # --- 生成 JPEG bytes ---
+    # Generate JPEG bytes
     def jpeg_bytes_from_uploader(uploaded):
         img = Image.open(uploaded).convert("RGB")
         img = fix_orientation(img)
@@ -47,10 +46,10 @@ def render():
         return buf
 
 
-    # --- 主界面 ---
+    # Main interface
     with st.form("capture"):
-        photo = st.camera_input("") or st.file_uploader("…or choose from library", type=["jpg", "jpeg", "png", "webp"])
-        
+        photo = st.camera_input(" ", label_visibility="collapsed") or st.file_uploader("…or choose from library", type=["jpg", "jpeg", "png", "webp"], label_visibility="collapsed")
+       
         # Display the image immediately after it is uploaded/captured
         if photo:
             # Use st.image to display the image. 
@@ -75,16 +74,16 @@ def render():
             idx = st.radio("Top-3 candidates", list(range(len(labels))), format_func=lambda i: labels[i], horizontal=True, index=0)
             chosen = topk[idx]["label"]
 
-            # --- 份量滑条 ---
+            # Portion size slider
             default_grams = 180 if chosen not in ("pizza", "ramen", "fried_rice", "salad") else {
                 "pizza": 150, "ramen": 450, "fried_rice": 250, "salad": 220
             }[chosen]
             grams = st.slider("Portion (grams)", 50, 800, value=default_grams, step=10)
 
-            # ✅ 仅在有 chosen 时加载配料和营养信息
+            # Load ingredients and nutrition info only when a food item is selected
             if "chosen" in locals() and chosen not in (None, "", "unknown"):
                 try:
-                    # --- 请求后端获取可选配料 ---
+                    # Request optional ingredients from backend
                     r = requests.get(f"{BACKEND}/api/addons", params={"label": chosen}, timeout=10)
                     r.raise_for_status()
                     addon_data = r.json()
@@ -93,14 +92,14 @@ def render():
                     st.warning(f"⚠️ Unable to load ingredient options: {e}")
                     addons_options = []
 
-                # --- 配料选择 ---
+                # Ingredient selection
                 picked = st.multiselect(
                     "Add / remove items",
                     addons_options,
                     format_func=lambda kv: kv[1],
                 )
 
-                # --- 请求营养信息 ---
+                # Request nutrition information
                 addon_keys = ",".join(k for k, _ in picked)
                 with st.spinner("Fetching nutrition…"):
                     r2 = requests.get(
@@ -111,7 +110,7 @@ def render():
                     r2.raise_for_status()
                     nutr = r2.json()
 
-                # --- 显示营养结果 ---
+                # Display nutrition results
                 st.subheader("Estimated nutrition")
                 c1, c2, c3, c4 = st.columns(4)
                 c1.metric("Calories (kcal)", nutr["totals"]["kcal"], f'{nutr["range"]["kcal_low"]}–{nutr["range"]["kcal_high"]}')
@@ -125,7 +124,7 @@ def render():
             else:
                 st.info("🧩 Wait for the image ready…")
 
-    # --- ✅ 新增：Add to My Meals ---
+    # Add to My Meals
     if st.button("➕ Add today's meal"):
         chosen = st.session_state.get("last_chosen")
         nutr = st.session_state.get("last_nutr")

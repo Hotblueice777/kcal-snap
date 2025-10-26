@@ -1,5 +1,11 @@
+# streamlit_client\assistant_page.py
+
 import streamlit as st
 import requests, os, base64
+import numpy as np
+import sounddevice as sd
+from scipy.io.wavfile import write
+import time
 
 BACKEND = os.getenv("BACKEND", "http://localhost:8000")
 
@@ -16,7 +22,7 @@ def render():
 
             fs = 44100
             seconds = 5
-            st.info("Recording for 5 seconds...")
+            st.info("Recording for 10 seconds...")
             myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
             sd.wait()
             write("input.wav", fs, myrecording)

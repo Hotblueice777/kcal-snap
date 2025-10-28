@@ -148,3 +148,7 @@ async def root():
 logger = logging.getLogger("uvicorn")
 logger.info("✅ FastAPI main app started successfully!")
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+

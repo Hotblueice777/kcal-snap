@@ -139,3 +139,10 @@ async def nutrition(label: str, grams: int = 180, addons: Optional[str] = ""):
 from assistant_api import app as assistant_app
 app.mount("/assistant", assistant_app)
 
+# Healthcheck Root----for Railway deploy
+@app.get("/")
+async def root():
+    return {"status": "ok", "message": "KcalSnap backend running successfully"}
+
+
+

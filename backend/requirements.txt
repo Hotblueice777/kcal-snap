@@ -26,3 +26,4 @@ faiss-cpu==1.7.4
 
 # Azure speech service
 azure-cognitiveservices-speech==1.38.0
+openai==1.45.0

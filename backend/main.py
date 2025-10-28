@@ -1,6 +1,7 @@
 # backend/main.py
 from __future__ import annotations
 import io, json
+import logging
 from typing import List, Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -144,5 +145,6 @@ app.mount("/assistant", assistant_app)
 async def root():
     return {"status": "ok", "message": "KcalSnap backend running successfully"}
 
-
+logger = logging.getLogger("uvicorn")
+logger.info("✅ FastAPI main app started successfully!")
 

@@ -1,11 +1,12 @@
 # streamlit_client/meal_page.py
+
+import os
 import streamlit as st
 import requests, os, time, base64
 import pandas as pd
 
-BACKEND = os.getenv("BACKEND", "http://localhost:8000")
-
 def render():
+    BACKEND = os.getenv("BACKEND_URL")
     st.markdown("<h1 style='color:#766A8F;'>My Meal — Daily Summary</h1>", unsafe_allow_html=True)
 
     if "meals" not in st.session_state or not st.session_state["meals"]:

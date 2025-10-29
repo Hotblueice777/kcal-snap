@@ -2,6 +2,9 @@
 
 import streamlit as st
 import scan_page, meal_page, assistant_page
+import os
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 st.set_page_config(page_title="KcalSnap", layout="centered")
 

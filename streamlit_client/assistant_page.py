@@ -1,15 +1,14 @@
 # streamlit_client\assistant_page.py
 
+import os
 import streamlit as st
-import requests, os, base64
-import numpy as np
+import requests, base64, numpy as np
 import sounddevice as sd
 from scipy.io.wavfile import write
 import time
 
-BACKEND = os.getenv("BACKEND", "http://localhost:8000")
-
 def render():
+    BACKEND = os.getenv("BACKEND_URL")
     st.markdown("<h1 style='color:#766A8F;'>AI Health Assistant</h1>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)

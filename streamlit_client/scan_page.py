@@ -1,12 +1,13 @@
 # scan_page.py
 
+import os
 import io, time, requests  # type: ignore
 import streamlit as st  # type: ignore
 from PIL import Image, ExifTags
 
-BACKEND = "http://localhost:8000"
-
 def render(): 
+    BACKEND = os.getenv("BACKEND_URL")
+    st.write("Backend connected to:", BACKEND)   # test------
     
     st.markdown("""
         <h1 style='margin-bottom:0; color:#766A8F'>KcalSnap</h1>
@@ -54,7 +55,7 @@ def render():
         if photo:
             # Use st.image to display the image. 
             # Streamlit handles the object type (UploadedFile) automatically.
-            st.image(photo, caption=photo.name if hasattr(photo, 'name') else 'Captured Photo', use_container_width=True)
+            st.image(photo, caption=photo.name if hasattr(photo, 'name') else 'Captured Photo', use_column_width=True)
         # 🌟 END NEW CODE
 
         submitted = st.form_submit_button("Analyze")
